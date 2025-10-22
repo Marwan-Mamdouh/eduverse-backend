@@ -2,9 +2,14 @@ import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import { loggerMiddleware } from "../middlewares/logger";
 import { UserRouter } from "../user/router";
+import { DatabaseConnector } from "../db/db";
+
+process.loadEnvFile("./.env");
 
 const app: Application = express();
 const PORT = process.env.PORT || 3000;
+
+DatabaseConnector();
 
 // Middleware
 app.use(cors());
