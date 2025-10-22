@@ -1,6 +1,7 @@
 import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import { loggerMiddleware } from "../middlewares/logger";
+import { UserRouter } from "../user/router";
 
 const app: Application = express();
 const PORT = process.env.PORT || 3000;
@@ -12,9 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(loggerMiddleware);
 
 // Routes
-app.get("/", (req: Request, res: Response) => {
-  res.json({ message: "Hello from Express with TypeScript!" });
-});
+app.use("/api/users", UserRouter);
 
 app.get("/api/health", (req: Request, res: Response) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });

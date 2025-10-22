@@ -45,4 +45,4 @@ const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
-export { getUsers, getUser, createUser, updateUser, deleteUser };
+export default { getUsers, getUser, createUser, updateUser, deleteUser };
