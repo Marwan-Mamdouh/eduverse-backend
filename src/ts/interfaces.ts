@@ -8,12 +8,19 @@ interface ICourse {
   //   category: enum
   hours: number;
   requirements?: string[];
-  rating?: rating[];
+  rating?: IRating[];
 }
 
-interface rating {
+interface IRating {
   userId: ObjectId;
   rate: number;
 }
 
-export { ICourse, rating };
+interface IUser {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+}
+export { ICourse, IRating as rating, IUser };

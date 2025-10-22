@@ -2,6 +2,10 @@ import express, { Application, Request, Response } from "express";
 import coursesRouter from "./courses/router";
 import dbConnect from "../db/db";
 import cors from "cors";
+import { loggerMiddleware } from "../middlewares/logger";
+import { UserRouter } from "../user/router";
+
+process.loadEnvFile("./.env");
 
 const app: Application = express();
 const PORT = process.env.PORT || 3000;
@@ -10,9 +14,12 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(loggerMiddleware);
 
 dbConnect();
 
+// Routes
+app.use("/api/users", UserRouter);
 app.use("/api/v1/courses", coursesRouter);
 
 // Start server
