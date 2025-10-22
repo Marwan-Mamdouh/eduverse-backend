@@ -1,5 +1,6 @@
 import express, { Application, Request, Response } from "express";
 import cors from "cors";
+import { loggerMiddleware } from "../middlewares/logger";
 
 const app: Application = express();
 const PORT = process.env.PORT || 3000;
@@ -8,6 +9,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(loggerMiddleware);
 
 // Routes
 app.get("/", (req: Request, res: Response) => {
