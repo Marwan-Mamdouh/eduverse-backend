@@ -1,4 +1,6 @@
 import express, { Application, Request, Response } from "express";
+import coursesRouter from "./courses/router";
+import dbConnect from "../db/db";
 import cors from "cors";
 
 const app: Application = express();
@@ -9,14 +11,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
-app.get("/", (req: Request, res: Response) => {
-  res.json({ message: "Hello from Express with TypeScript!" });
-});
+dbConnect();
 
-app.get("/api/health", (req: Request, res: Response) => {
-  res.json({ status: "ok", timestamp: new Date().toISOString() });
-});
+app.use("/api/v1/courses", coursesRouter);
 
 // Start server
 app.listen(PORT, () => {
