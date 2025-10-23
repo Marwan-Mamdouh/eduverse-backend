@@ -8,8 +8,10 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "typeRoots": ["./node_modules/@types"],
+    "types": ["node", "express"]
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "src/ts/types/express.d.ts"],
   "exclude": ["node_modules"]
 }

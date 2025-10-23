@@ -1,9 +1,10 @@
-import express, { Application, Request, Response } from "express";
-import coursesRouter from "./courses/router";
-import dbConnect from "../db/db";
+import express, { Application } from "express";
 import cors from "cors";
-import { loggerMiddleware } from "../middlewares/logger";
-import { UserRouter } from "../user/router";
+import { loggerMiddleware } from "./middlewares/logger";
+import coursesRouter from "./courses/router";
+import { UserRouter } from "./user/router";
+import authRouter from "./auth/router";
+import dbConnect from "./db/db";
 
 process.loadEnvFile("./.env");
 
@@ -19,8 +20,9 @@ app.use(loggerMiddleware);
 dbConnect();
 
 // Routes
+app.use("/api/auth", authRouter);
 app.use("/api/users", UserRouter);
-app.use("/api/v1/courses", coursesRouter);
+app.use("/api/courses", coursesRouter);
 
 // Start server
 app.listen(PORT, () => {
