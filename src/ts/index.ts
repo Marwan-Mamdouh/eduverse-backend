@@ -5,8 +5,9 @@ import coursesRouter from "./courses/router";
 import { UserRouter } from "./user/router";
 import authRouter from "./auth/router";
 import dbConnect from "./db/db";
+import { errorHandler } from "./middlewares/errorHandler";
 
-process.loadEnvFile("./.env");
+process.loadEnvFile(".env");
 
 const app: Application = express();
 const PORT = process.env.PORT || 3000;
@@ -23,6 +24,8 @@ dbConnect();
 app.use("/api/auth", authRouter);
 app.use("/api/users", UserRouter);
 app.use("/api/courses", coursesRouter);
+
+app.use(errorHandler);
 
 // Start server
 app.listen(PORT, () => {
