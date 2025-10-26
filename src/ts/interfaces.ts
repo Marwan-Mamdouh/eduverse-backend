@@ -14,6 +14,8 @@ interface ICourse {
 interface IRating {
   userId: ObjectId;
   rate: number;
+  // comment: string
+  // date: string
 }
 
 interface IUser extends Document {
@@ -22,6 +24,7 @@ interface IUser extends Document {
   password: string;
   role: "admin" | "user";
   refreshToken?: string;
+  watchLater: string[];
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
@@ -31,7 +34,7 @@ interface TokenPayload {
   role: string;
 }
 
-interface authResponse {
+interface CustomResponse {
   success: boolean;
   message?: string;
   code: number;
@@ -39,4 +42,21 @@ interface authResponse {
   data?: any;
 }
 
-export { ICourse, IRating as rating, IUser, TokenPayload, authResponse };
+interface outline {
+  title: string;
+  discretion: string;
+}
+
+interface conclusion {
+  points: string[];
+}
+
+export {
+  ICourse,
+  IRating as rating,
+  IUser,
+  TokenPayload,
+  CustomResponse,
+  outline,
+  conclusion,
+};
