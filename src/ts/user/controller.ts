@@ -1,53 +1,51 @@
 import { Request, Response } from "express";
-import serivce from "./service";
+import service from "./service";
+import { AuthenticatedRequest } from "../middlewares/auth";
 
-const getUsers = async (req: Request, res: Response) => {
-  try {
-    const users = await serivce.get();
-    return res.status(200).json({ data: users });
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
+const getUsers = async (req: Request, res: Response): Promise<void> => {
+  const response = await service.get();
+  res.status(response.code).json(response);
 };
 
-const getUser = async (req: Request, res: Response) => {
-  try {
-    const user = await serivce.find(req.params.id);
-    return res.status(200).json({ data: user });
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
+const getUser = async (req: Request, res: Response): Promise<void> => {
+  const response = await service.find(req.params.id);
+  res.status(response.code).json(response);
 };
 
+const getWatchLater = async (req: Request, res: Response): Promise<void> => {
+  const response = await service.getWatchLater(req.params.id);
+  res.status(response.code).json(response);
+};
 const createUser = async (req: Request, res: Response) => {
-  try {
-    const user = await serivce.add(req.body);
-    return res
-      .status(200)
-      .json({ message: "User Created Successfully", data: user });
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
+  const response = await service.add(req.body);
+  return res.status(response.code).json(response);
 };
 
 const updateUser = async (req: Request, res: Response) => {
-  try {
-    const user = await serivce.update(req.params.id, req.body);
-    return res
-      .status(200)
-      .json({ message: "User Updated Successfully", data: user });
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
+  const response = await service.update(req.params.id, req.body);
+  return res.status(response.code).json(response);
 };
 
-const deleteUser = async (req: Request, res: Response) => {
-  try {
-    const user = await serivce.remove(req.params.id);
-    return res.status(200).json({ message: "User Deleted Successfully" });
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
+const handleWatchLater = async (
+  req: AuthenticatedRequest,
+  res: Response
+): Promise<void> => {
+  const { courseId, userId } = req.body;
+  const response = await service.handleWatchLater(userId, courseId);
+  res.status(response.code).json(response);
 };
 
-export default { getUsers, getUser, createUser, updateUser, deleteUser };
+const deleteUser = async (req: Request, res: Response): Promise<void> => {
+  const response = await service.remove(req.params.id);
+  res.status(response.code).json(response);
+};
+
+export default {
+  getUsers,
+  getUser,
+  getWatchLater,
+  createUser,
+  updateUser,
+  handleWatchLater,
+  deleteUser,
+};
