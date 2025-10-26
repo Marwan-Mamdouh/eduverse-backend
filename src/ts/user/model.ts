@@ -19,6 +19,7 @@ const userSchema = new Schema<IUser>(
       // minlength: 6,
     },
     role: { type: String, enum: ["admin", "user"], default: "user" },
+    watchLater: { type: [String] },
     refreshToken: { type: String },
   },
   { versionKey: false, timestamps: true }
