@@ -82,7 +82,6 @@ const handleWatchLater = async (
     : { $addToSet: { watchLater: courseId } };
 
   const updatedList = await repository.updateWatchLater(userId, query);
-  console.log(updatedList);
   return { success: true, code: 200, data: updatedList };
 };
 
@@ -104,12 +103,12 @@ const signIn = async (
 ): Promise<CustomResponse> => {
   const foundedUser = await repository.findByEmail(email);
   if (!foundedUser)
-    return { success: false, code: 400, message: "User NOT found!" };
+    return { success: false, code: 400, message: "Wrong email or password" };
   const isValidPassword: boolean = await foundedUser.comparePassword(
     `${password}`
   );
   if (!isValidPassword)
-    return { success: false, code: 400, message: "Invalid credentials" };
+    return { success: false, code: 400, message: "Wrong email or password" };
 
   const payload = generatePayLoad(foundedUser);
 
@@ -117,19 +116,14 @@ const signIn = async (
 
   await saveRefreshToken(foundedUser, refreshToken);
 
-  return {
-    success: true,
-    message: "Login successful.",
-    code: 200,
-    data: {
-      user: {
-        ...payload,
-        name: foundedUser.name,
-      },
-      accessToken,
-      refreshToken,
-    },
-  };
+  return generateResponse(
+    "Login successful.",
+    200,
+    payload,
+    foundedUser,
+    accessToken,
+    refreshToken
+  );
 };
 
 const signUp = async ({
@@ -152,19 +146,14 @@ const signUp = async ({
 
   await saveRefreshToken(savedUser, refreshToken);
 
-  return {
-    success: true,
-    message: "User registered successfully",
-    code: 201,
-    data: {
-      user: {
-        ...payload,
-        name: savedUser.name,
-      },
-      accessToken,
-      refreshToken,
-    },
-  };
+  return generateResponse(
+    "User registered successfully",
+    201,
+    payload,
+    savedUser,
+    accessToken,
+    refreshToken
+  );
 };
 
 const refreshToken = async (token: string): Promise<CustomResponse> => {
@@ -216,6 +205,29 @@ export default {
 };
 // =============== helper functions =============================
 
+const generateResponse = (
+  message: string,
+  code: number,
+  payload: TokenPayload,
+  user: IUser,
+  accessToken: string,
+  refreshToken: string
+): CustomResponse => {
+  return {
+    success: true,
+    message,
+    code,
+    data: {
+      user: {
+        ...payload,
+        name: user.name,
+      },
+      accessToken,
+      refreshToken,
+    },
+  };
+};
+
 const generatePayLoad = (user: IUser): TokenPayload => {
   return {
     userId: `${user._id}`,
@@ -223,6 +235,7 @@ const generatePayLoad = (user: IUser): TokenPayload => {
     role: user.role,
   };
 };
+
 const generateTokens = (
   payload: TokenPayload
 ): { accessToken: string; refreshToken: string } => {
