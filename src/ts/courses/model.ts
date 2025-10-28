@@ -18,7 +18,7 @@ const schema = new Schema(
     price: { type: Number, required: true },
     outline: { type: [outLineSchema] },
     conclusion: { type: [String] },
-    // category: { type: String, trim: true },
+    category: { type: String, trim: true },
     // we need it as enum
     // frontend backend
     targetAudience: { type: String, trim: true },
