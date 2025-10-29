@@ -7,7 +7,7 @@ const ratingSchema = new Schema({
 
 const outLineSchema = new Schema({
   title: { type: String, trim: true },
-  discretion: { type: String, trim: true },
+  subtitle: { type: String, trim: true },
 });
 
 const schema = new Schema(
