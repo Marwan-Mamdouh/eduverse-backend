@@ -1,8 +1,13 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import { TokenPayload } from "../interfaces";
+import { AuthenticatedRequest } from "./auth";
 
 export const authorize = (...roles: string[]) => {
-  return (req: Request, res: Response, next: NextFunction): void => {
+  return (
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction
+  ): void => {
     const user = req.user as TokenPayload;
 
     if (!user) {

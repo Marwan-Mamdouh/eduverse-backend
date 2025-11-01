@@ -1,5 +1,5 @@
 import { CustomResponse, ICourse } from "../interfaces";
-import coursesRepository from "./repository";
+import repository from "./repository";
 
 const getCourseService = async (id: string): Promise<CustomResponse> => {
   if (!id)
@@ -8,14 +8,14 @@ const getCourseService = async (id: string): Promise<CustomResponse> => {
       code: 400,
       message: "can't search with undefined id",
     };
-  const course = await coursesRepository.getCourseRepo(id);
+  const course = await repository.getCourseRepo(id);
   if (!course)
     return { success: false, code: 204, message: "no courses found." };
   return { success: true, code: 200, data: course };
 };
 
 const getCoursesService = async (): Promise<CustomResponse> => {
-  const courses = await coursesRepository.getCoursesRepo();
+  const courses = await repository.getCoursesRepo();
   if (!courses)
     return { success: true, code: 204, message: "no courses found" };
   return { success: true, code: 200, data: courses };
@@ -28,7 +28,7 @@ const addCourseService = async (course: ICourse): Promise<CustomResponse> => {
       code: 400,
       message: "can't add course with no body.",
     };
-  const addedCourse = await coursesRepository.addCourseRepo(course);
+  const addedCourse = await repository.addCourseRepo(course);
   if (!addedCourse)
     return {
       success: false,
@@ -53,10 +53,7 @@ const updateCourseService = async (
       code: 400,
       message: "can't update with undefined id or course",
     };
-  const savedCourse = await coursesRepository.updateCourseRepo(
-    id,
-    updatedCourse
-  );
+  const savedCourse = await repository.updateCourseRepo(id, updatedCourse);
   if (!savedCourse)
     return {
       success: false,
@@ -71,6 +68,18 @@ const updateCourseService = async (
   };
 };
 
+const addReview = async (
+  userId: string,
+  courseId: string,
+  rate: number,
+  comment: string
+): Promise<CustomResponse> => {
+  if (!userId || !courseId || !rate || !comment)
+    return { success: false, code: 400, message: "missing data" };
+  const response = await repository.addReview(userId, courseId, rate, comment);
+  return { success: true, code: 200, data: response };
+};
+
 const deleteCourseService = async (id: string): Promise<CustomResponse> => {
   if (!id)
     return {
@@ -78,7 +87,7 @@ const deleteCourseService = async (id: string): Promise<CustomResponse> => {
       code: 400,
       message: "can't delete with undefined id",
     };
-  const deletedCourse = await coursesRepository.deleteCourseRepo(id);
+  const deletedCourse = await repository.deleteCourseRepo(id);
   if (!deletedCourse)
     return {
       success: false,
@@ -97,5 +106,6 @@ export default {
   getCoursesService,
   addCourseService,
   updateCourseService,
+  addReview,
   deleteCourseService,
 };

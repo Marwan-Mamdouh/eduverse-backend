@@ -12,6 +12,12 @@ const signIn = async (req: Request, res: Response): Promise<void> => {
   res.status(response.code).json(response);
 };
 
+const signInWithGoogle = async (req: Request, res: Response): Promise<void> => {
+  const { name, email } = req.body;
+  const response = await service.signInWithGoogle(name, email);
+  res.status(response.code).json(response);
+};
+
 const signUp = async (req: Request, res: Response): Promise<void> => {
   if (!req.body) {
     res.status(400).json({ message: "Missing data." });
@@ -44,4 +50,4 @@ const logout = async (
   res.status(response.code).json(response);
 };
 
-export default { signIn, signUp, refreshToken, logout };
+export default { signIn, signInWithGoogle, signUp, refreshToken, logout };

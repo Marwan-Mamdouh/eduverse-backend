@@ -7,7 +7,8 @@ export const loggerMiddleware = (
 ) => {
   const method = req.method;
   const url = req.originalUrl;
-  const time = new Date().toLocaleTimeString();
+  const time = new Date().toLocaleString();
+  const body = JSON.stringify(req.body);
 
   // ANSI color codes
   const colors = {
@@ -41,7 +42,9 @@ export const loggerMiddleware = (
   }
 
   console.log(
-    `${colors.gray}[${time}]${colors.reset} ${methodColor}${method}${colors.reset} ${colors.cyan}${url}${colors.reset}`
+    `${colors.gray}[${time}]${colors.reset} ${methodColor}${method}${
+      colors.reset
+    } ${colors.cyan}${url}${colors.reset} req body: ${body ?? ""}`
   );
 
   next();

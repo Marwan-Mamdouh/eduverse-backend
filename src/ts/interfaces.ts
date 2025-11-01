@@ -1,4 +1,4 @@
-import { ObjectId, Document } from "mongoose";
+import { Document } from "mongoose";
 
 interface ICourse {
   name: string;
@@ -12,7 +12,7 @@ interface ICourse {
 }
 
 interface IRating {
-  userId: ObjectId;
+  userId: string;
   rate: number;
   // comment: string
   // date: string
@@ -23,8 +23,10 @@ interface IUser extends Document {
   email: string;
   password: string;
   role: "admin" | "user";
+  cart?: string[];
+  watchLater?: string[];
+  purchaseCourses?: string[];
   refreshToken?: string;
-  watchLater: string[];
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
@@ -42,21 +44,10 @@ interface CustomResponse {
   data?: any;
 }
 
-interface outline {
-  title: string;
-  discretion: string;
-}
-
-interface conclusion {
-  points: string[];
-}
-
 export {
   ICourse,
   IRating as rating,
   IUser,
   TokenPayload,
   CustomResponse,
-  outline,
-  conclusion,
 };

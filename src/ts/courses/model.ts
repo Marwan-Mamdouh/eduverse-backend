@@ -2,7 +2,7 @@ import { model, Schema } from "mongoose";
 
 const ratingSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  comments: { type: String, required: true },
+  comment: { type: String, required: true },
   rate: { type: Number, required: true, min: 0, max: 5 },
 });
 
