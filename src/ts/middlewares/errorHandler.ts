@@ -7,6 +7,7 @@ export const errorHandler = (
   __: NextFunction
 ) => {
   console.error(err.message);
+  console.trace("Error stack:");
   res.status(500).json({
     success: false,
     message: "Something went wrong",
