@@ -49,8 +49,8 @@ const handleWatchLater = async (
   req: AuthenticatedRequest,
   res: Response,
 ): Promise<void> => {
-  const { courseId } = req.body;
-  const response = await service.handleWatchLater(req.userId!, courseId);
+  const { courseId, userId } = req.body;
+  const response = await service.handleWatchLater(userId, courseId);
   res.status(response.code).json(response);
 };
 
