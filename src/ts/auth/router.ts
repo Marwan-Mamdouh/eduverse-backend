@@ -7,8 +7,7 @@ const router = Router();
 router.post("/signin", controller.signIn);
 router.post("/signup", controller.signUp);
 router.post("/refresh-token", controller.refreshToken);
-router.post("/logout", authenticate, controller.logout);
-
 router.post("/with-google", controller.signInWithGoogle);
+router.post("/logout", authenticate, controller.logout);
 
 export default router;

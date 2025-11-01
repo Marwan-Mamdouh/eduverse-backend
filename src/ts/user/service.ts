@@ -185,9 +185,23 @@ const signInWithGoogle = async (
   if (!name || !email)
     return { success: false, code: 400, message: "Missing google token" };
   const user = await repository.findByEmail(email);
-  const response =
+  const newUser =
     user ?? (await User.create({ name, email, password: "12345678" }));
-  return { success: true, code: 200, data: response };
+
+  const payload = generatePayLoad(newUser);
+
+  const { accessToken, refreshToken } = generateTokens(payload);
+
+  await saveRefreshToken(newUser, refreshToken);
+
+  return generateResponse(
+    "Login successful.",
+    200,
+    payload,
+    newUser,
+    accessToken,
+    refreshToken,
+  );
 };
 
 const signUp = async ({
