@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import coursesService from "./service";
+import { AuthenticatedRequest } from "../middlewares/auth";
 
 const getCourseById = async (req: Request, res: Response): Promise<void> => {
   const response = await coursesService.getCourseService(req.params.id);
@@ -24,9 +25,24 @@ const updateCourseById = async (req: Request, res: Response): Promise<void> => {
   res.status(response.code).json(response);
 };
 
+const addReview = async (
+  req: AuthenticatedRequest,
+  res: Response
+): Promise<void> => {
+  const { rate, comment, courseId } = req.body;
+  console.log(rate, comment, courseId);
+  const response = await coursesService.addReview(
+    req.userId!,
+    courseId,
+    rate,
+    comment
+  );
+  res.status(response.code).json(response);
+};
+
 const deleteCourseById = async (req: Request, res: Response): Promise<void> => {
   const response = await coursesService.deleteCourseService(req.params.id);
-  console.log(response);
+  // console.log(response);
   res.status(response.code).json(response);
 };
 
@@ -35,5 +51,6 @@ export default {
   getAllCourse,
   addCourse,
   updateCourseById,
+  addReview,
   deleteCourseById,
 };
