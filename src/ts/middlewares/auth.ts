@@ -16,7 +16,7 @@ const authenticate = async (
     console.log("Validating user authentication...");
     const authHeader = req.headers.authorization;
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    if (!authHeader?.startsWith("Bearer ")) {
       res.status(401).json({ success: false, error: "Missing access token." });
       return;
     }
@@ -26,6 +26,7 @@ const authenticate = async (
     const decoded = verifyAccessToken(token);
     req.user = decoded;
     req.userId = decoded.userId;
+    console.log("authentication done");
 
     next();
   } catch (error) {
