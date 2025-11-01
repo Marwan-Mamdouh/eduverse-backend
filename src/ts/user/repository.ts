@@ -11,6 +11,10 @@ const repository = {
   getWatchLater: async (userId: string) => {
     return await User.findById(userId, { name: 1, watchLater: 1 });
   },
+  getUserCart: async (userId: string) => await User.findById(userId),
+  signWithGoogle: async (name: string, email: string) => {
+    console.log("not working yet");
+  },
   find: async (id: string) => {
     return await User.findById(id, {
       name: 1,
@@ -21,6 +25,9 @@ const repository = {
   },
   add: async (data: IUser) => {
     return await User.create(data);
+  },
+  purchase: async (courses: string[]) => {
+    console.log("not working yet");
   },
   update: async (id: string, data: IUser) => {
     return await User.findByIdAndUpdate(id, data, {
@@ -34,12 +41,29 @@ const repository = {
       projection: { name: 1, watchLater: 1 },
     });
   },
+  updateCart: async (userId: string, query: any) => {
+    return await User.findByIdAndUpdate(userId, query, {
+      new: true,
+      projection: { name: 1, watchLater: 1 },
+    });
+  },
   remove: async (id: string) => {
     return await User.findByIdAndDelete(id);
   },
   findByEmail: async (email: string) => {
     if (!email) throw new Error("Missing email.");
-    return await User.findOne({ email }, { email: 1, password: 1, role: 1 });
+    return await User.findOne(
+      { email },
+      {
+        email: 1,
+        password: 1,
+        name: 1,
+        role: 1,
+        cart: 1,
+        watchLater: 1,
+        purchase: 1,
+      }
+    );
   },
 };
 

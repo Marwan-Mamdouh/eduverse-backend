@@ -5,6 +5,7 @@ import {
   generateRefreshToken,
   verifyRefreshToken,
 } from "../utils/jwt";
+import User from "./model";
 
 const get = async (): Promise<CustomResponse> => {
   const users = await repository.get();
@@ -16,7 +17,14 @@ const getWatchLater = async (userId: string): Promise<CustomResponse> => {
   const watchLater = await repository.getWatchLater(userId);
   if (!watchLater)
     return { success: false, code: 404, message: "user not found" };
-  return { success: true, code: 200, data: watchLater };
+  return { success: true, code: 200, data: "watchLater" };
+};
+
+const getUserCart = async (userId: string): Promise<CustomResponse> => {
+  if (!userId)
+    return { success: false, code: 400, message: "can't search with no id" };
+  const response = await repository.getUserCart(userId);
+  return { success: true, code: 200, data: response };
 };
 
 const find = async (id: string): Promise<CustomResponse> => {
@@ -44,6 +52,17 @@ const add = async (data: IUser): Promise<CustomResponse> => {
   };
 };
 
+const purchase = async (courses: string[]): Promise<CustomResponse> => {
+  if (!courses)
+    return {
+      success: false,
+      code: 400,
+      message: "can't buy with no courses in the body",
+    };
+  const response = await repository.purchase(courses);
+  return { success: true, code: 200, data: response };
+};
+
 const update = async (id: string, data: IUser): Promise<CustomResponse> => {
   if (!id) return { success: false, code: 400, message: "id is required" };
   if (!data.name && !data.email && !data.password && !data.role)
@@ -63,6 +82,21 @@ const update = async (id: string, data: IUser): Promise<CustomResponse> => {
   };
 };
 
+const handleCart = async (
+  userId: string,
+  courseId: string
+): Promise<CustomResponse> => {
+  if (!userId || !courseId)
+    return { success: false, code: 400, message: "Missing data" };
+  const cartList = await repository.getUserCart(userId);
+  const alreadyExists = cartList!.cart?.includes(courseId);
+  const query = alreadyExists
+    ? { $pull: { cart: courseId } }
+    : { $addToSet: { cart: courseId } };
+  const response = await repository.updateCart(userId, query);
+  return { success: true, code: 200, data: response };
+};
+
 const handleWatchLater = async (
   userId: string,
   courseId: string
@@ -76,7 +110,7 @@ const handleWatchLater = async (
   const watchLaterList = await repository.getWatchLater(userId);
   if (!watchLaterList)
     return { success: false, code: 404, message: "user not found" };
-  const alreadyExists = watchLaterList?.watchLater.includes(courseId);
+  const alreadyExists = watchLaterList.watchLater?.includes(courseId);
   const query = alreadyExists
     ? { $pull: { watchLater: courseId } }
     : { $addToSet: { watchLater: courseId } };
@@ -126,6 +160,18 @@ const signIn = async (
   );
 };
 
+const signInWithGoogle = async (
+  name: string,
+  email: string
+): Promise<CustomResponse> => {
+  if (!name || !email)
+    return { success: false, code: 400, message: "Missing google token" };
+  const user = await repository.findByEmail(email);
+  const response =
+    user ?? (await User.create({ name, email, password: "12345678" }));
+  return { success: true, code: 200, data: response };
+};
+
 const signUp = async ({
   email,
   name,
@@ -160,7 +206,7 @@ const refreshToken = async (token: string): Promise<CustomResponse> => {
   const decoded = verifyRefreshToken(token);
   const response = await find(decoded.userId);
   const user = response.data;
-  if (!user || user.refreshToken !== token)
+  if (user?.refreshToken !== token)
     return {
       success: false,
       code: 400,
@@ -192,13 +238,15 @@ const logout = async (userId: string): Promise<CustomResponse> => {
 
 export default {
   get,
-  getWatchLater,
   find,
   add,
+  purchase,
   update,
+  handleCart,
   handleWatchLater,
   remove,
   signIn,
+  signInWithGoogle,
   signUp,
   refreshToken,
   logout,

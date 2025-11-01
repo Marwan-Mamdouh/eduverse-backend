@@ -5,10 +5,8 @@ const getCourseRepo = async (id: string) => await Courses.findById(id);
 
 const getCoursesRepo = async () => await Courses.find();
 
-const addCourseRepo = async (newCourse: ICourse) => {
-  const course = new Courses(newCourse);
-  return await course.save();
-};
+const addCourseRepo = async (newCourse: ICourse) =>
+  await new Courses(newCourse).save();
 
 const updateCourseRepo = async (id: string, course: ICourse) =>
   await Courses.findByIdAndUpdate(id, { $set: course }, { new: true });
@@ -19,10 +17,9 @@ const addReview = async (
   rate: number,
   comment: string
 ) => {
-  // console.log(userId, rate, comment);
   const response = await Courses.findByIdAndUpdate(
     courseId,
-    { $addToSet: { rating: { user: userId, rate: rate, comment: comment } } },
+    { $addToSet: { rating: { user: userId, rate, comment } } },
     { new: true }
   );
   return response;
