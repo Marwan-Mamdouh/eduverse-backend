@@ -13,13 +13,15 @@ const userSchema = new Schema<IUser>(
       lowercase: true,
       trim: true,
     },
-    password: {
-      type: String,
-      required: true,
-      // minlength: 6,
-    },
+    password: { type: String, required: true, minlength: 8 },
     role: { type: String, enum: ["admin", "user"], default: "user" },
-    watchLater: { type: [String] },
+    cart: { type: [Schema.Types.ObjectId], ref: "courses", default: [] },
+    purchaseCourses: {
+      type: [Schema.Types.ObjectId],
+      ref: "courses",
+      default: [],
+    },
+    watchLater: { type: [Schema.Types.ObjectId], ref: "courses", default: [] },
     refreshToken: { type: String },
   },
   { versionKey: false, timestamps: true }

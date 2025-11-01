@@ -12,13 +12,18 @@ const getUser = async (req: Request, res: Response): Promise<void> => {
   res.status(response.code).json(response);
 };
 
-const getWatchLater = async (req: Request, res: Response): Promise<void> => {
-  const response = await service.getWatchLater(req.params.id);
-  res.status(response.code).json(response);
-};
 const createUser = async (req: Request, res: Response) => {
   const response = await service.add(req.body);
   return res.status(response.code).json(response);
+};
+
+const purchaseCourse = async (
+  req: AuthenticatedRequest,
+  res: Response
+): Promise<void> => {
+  const { courses }: { courses: string[] } = req.body;
+  const response = await service.purchase(courses);
+  res.status(response.code).json(response);
 };
 
 const updateUser = async (req: Request, res: Response) => {
@@ -26,12 +31,21 @@ const updateUser = async (req: Request, res: Response) => {
   return res.status(response.code).json(response);
 };
 
+const handleCart = async (
+  req: AuthenticatedRequest,
+  res: Response
+): Promise<void> => {
+  const { courseId } = req.body;
+  const response = await service.handleCart(req.userId!, courseId);
+  res.status(response.code).json(response);
+};
+
 const handleWatchLater = async (
   req: AuthenticatedRequest,
   res: Response
 ): Promise<void> => {
-  const { courseId, userId } = req.body;
-  const response = await service.handleWatchLater(userId, courseId);
+  const { courseId } = req.body;
+  const response = await service.handleWatchLater(req.userId!, courseId);
   res.status(response.code).json(response);
 };
 
@@ -43,9 +57,10 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
 export default {
   getUsers,
   getUser,
-  getWatchLater,
   createUser,
+  purchaseCourse,
   updateUser,
+  handleCart,
   handleWatchLater,
   deleteUser,
 };
