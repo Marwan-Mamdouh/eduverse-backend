@@ -12,6 +12,11 @@ const getUser = async (req: Request, res: Response): Promise<void> => {
   res.status(response.code).json(response);
 };
 
+const getCart = async (req: Request, res: Response): Promise<void> => {
+  const response = await service.getCart(req.params.id);
+  res.status(response.code).json(response);
+};
+
 const createUser = async (req: Request, res: Response) => {
   const response = await service.add(req.body);
   return res.status(response.code).json(response);
@@ -19,7 +24,7 @@ const createUser = async (req: Request, res: Response) => {
 
 const purchaseCourse = async (
   req: AuthenticatedRequest,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   const { courses }: { courses: string[] } = req.body;
   const response = await service.purchase(courses);
@@ -33,7 +38,7 @@ const updateUser = async (req: Request, res: Response) => {
 
 const handleCart = async (
   req: AuthenticatedRequest,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   const { courseId } = req.body;
   const response = await service.handleCart(req.userId!, courseId);
@@ -42,7 +47,7 @@ const handleCart = async (
 
 const handleWatchLater = async (
   req: AuthenticatedRequest,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   const { courseId } = req.body;
   const response = await service.handleWatchLater(req.userId!, courseId);
@@ -60,6 +65,7 @@ export default {
   createUser,
   purchaseCourse,
   updateUser,
+  getCart,
   handleCart,
   handleWatchLater,
   deleteUser,

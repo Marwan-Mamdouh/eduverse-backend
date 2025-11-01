@@ -82,14 +82,32 @@ const update = async (id: string, data: IUser): Promise<CustomResponse> => {
   };
 };
 
+const getCart = async (id: string): Promise<CustomResponse> => {
+  if (!id) return { success: false, code: 400, message: "id is required" };
+  const cartList = await repository.getUserCart(id);
+  if (!cartList)
+    return {
+      success: false,
+      code: 404,
+      message: `no user match for id: ${id}`,
+    };
+  return {
+    success: true,
+    code: 200,
+    data: cartList.cart,
+  };
+};
+
 const handleCart = async (
   userId: string,
-  courseId: string
+  courseId: string,
 ): Promise<CustomResponse> => {
   if (!userId || !courseId)
     return { success: false, code: 400, message: "Missing data" };
   const cartList = await repository.getUserCart(userId);
-  const alreadyExists = cartList!.cart?.includes(courseId);
+  const alreadyExists = cartList!.cart
+    ?.map((item: any) => item._id.toString())
+    .includes(courseId);
   const query = alreadyExists
     ? { $pull: { cart: courseId } }
     : { $addToSet: { cart: courseId } };
@@ -99,7 +117,7 @@ const handleCart = async (
 
 const handleWatchLater = async (
   userId: string,
-  courseId: string
+  courseId: string,
 ): Promise<CustomResponse> => {
   if (!courseId || !userId)
     return {
@@ -133,13 +151,13 @@ const remove = async (id: string): Promise<CustomResponse> => {
 
 const signIn = async (
   email: string,
-  password: string
+  password: string,
 ): Promise<CustomResponse> => {
   const foundedUser = await repository.findByEmail(email);
   if (!foundedUser)
     return { success: false, code: 400, message: "Wrong email or password" };
   const isValidPassword: boolean = await foundedUser.comparePassword(
-    `${password}`
+    `${password}`,
   );
   if (!isValidPassword)
     return { success: false, code: 400, message: "Wrong email or password" };
@@ -156,13 +174,13 @@ const signIn = async (
     payload,
     foundedUser,
     accessToken,
-    refreshToken
+    refreshToken,
   );
 };
 
 const signInWithGoogle = async (
   name: string,
-  email: string
+  email: string,
 ): Promise<CustomResponse> => {
   if (!name || !email)
     return { success: false, code: 400, message: "Missing google token" };
@@ -198,7 +216,7 @@ const signUp = async ({
     payload,
     savedUser,
     accessToken,
-    refreshToken
+    refreshToken,
   );
 };
 
@@ -242,6 +260,7 @@ export default {
   add,
   purchase,
   update,
+  getCart,
   handleCart,
   handleWatchLater,
   remove,
@@ -259,7 +278,7 @@ const generateResponse = (
   payload: TokenPayload,
   user: IUser,
   accessToken: string,
-  refreshToken: string
+  refreshToken: string,
 ): CustomResponse => {
   return {
     success: true,
@@ -269,6 +288,9 @@ const generateResponse = (
       user: {
         ...payload,
         name: user.name,
+        cart: user.cart,
+        watchLater: user.watchLater,
+        purchase: user.purchaseCourses,
       },
       accessToken,
       refreshToken,
@@ -285,7 +307,7 @@ const generatePayLoad = (user: IUser): TokenPayload => {
 };
 
 const generateTokens = (
-  payload: TokenPayload
+  payload: TokenPayload,
 ): { accessToken: string; refreshToken: string } => {
   const accessToken = generateAccessToken(payload);
   const refreshToken = generateRefreshToken(payload);
@@ -294,7 +316,7 @@ const generateTokens = (
 
 const saveRefreshToken = async (
   user: IUser,
-  refreshToken: string
+  refreshToken: string,
 ): Promise<void> => {
   user.refreshToken = refreshToken;
   await user.save();

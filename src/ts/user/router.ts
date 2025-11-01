@@ -9,6 +9,7 @@ router.use(authenticate);
 
 router.get("/", controller.getUsers);
 router.get("/:id", controller.getUser);
+router.get("/cart/:id", controller.getCart);
 
 // router.use(authorize("admin"));
 
