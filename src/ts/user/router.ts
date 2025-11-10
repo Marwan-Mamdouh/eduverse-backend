@@ -10,7 +10,7 @@ router.use(authenticate);
 router.get("/", controller.getUsers);
 router.get("/:id", controller.getUser);
 
-// router.use(authorize("admin"));
+router.use(authorize("admin"));
 
 router.post("/", controller.createUser);
 router.post("/buy/courses", controller.purchaseCourse); // not tested
