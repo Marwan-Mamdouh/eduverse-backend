@@ -4,6 +4,7 @@ import { loggerMiddleware } from "./middlewares/logger";
 import coursesRouter from "./courses/router";
 import { UserRouter } from "./user/router";
 import authRouter from "./auth/router";
+import paymentRouter from "./payment/router";
 import dbConnect from "./db/db";
 import { errorHandler } from "./middlewares/errorHandler";
 
@@ -24,7 +25,9 @@ dbConnect();
 app.use("/api/auth", authRouter);
 app.use("/api/users", UserRouter);
 app.use("/api/courses", coursesRouter);
+app.use("/api/payment", paymentRouter);
 
+// Error Handling Middleware
 app.use(errorHandler);
 
 // Start server
