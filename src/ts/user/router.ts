@@ -10,14 +10,14 @@ router.use(authenticate);
 router.get("/", controller.getUsers);
 router.get("/:id", controller.getUser);
 router.get("/cart/:id", controller.getCart);
+router.patch("/cart", controller.handleCart);
+router.patch("/watch-later", controller.handleWatchLater);
 
 router.use(authorize("admin"));
 
 router.post("/", controller.createUser);
 router.post("/buy/courses", controller.purchaseCourse); // not tested
 router.put("/:id", controller.updateUser);
-router.patch("/watch-later", controller.handleWatchLater);
-router.patch("/cart", controller.handleCart);
 router.delete("/:id", controller.deleteUser);
 
 export { router as UserRouter };
