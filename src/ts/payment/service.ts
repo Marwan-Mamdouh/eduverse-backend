@@ -3,7 +3,7 @@ import repo from "../courses/repository";
 import repository from "./repository";
 import { CustomResponse } from "../interfaces";
 
-process.loadEnvFile(".env");
+// process.loadEnvFile(".env");
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-10-29.clover",
 });

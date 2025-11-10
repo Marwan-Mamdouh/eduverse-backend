@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-process.loadEnvFile(".env");
+// process.loadEnvFile(".env");
 
 const connect = async (): Promise<void> => {
   await mongoose
