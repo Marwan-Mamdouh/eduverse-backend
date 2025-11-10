@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "src/ts/index.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "src/ts/index.ts"
+    }
+  ],
+  "env": {
+    "MONGO_URL": "@MONGO_URL",
+    "JWT_SECRET": "@JWT_SECRET",
+    "JWT_REFRESH_SECRET": "@JWT_REFRESH_SECRET",
+    "PORT": "3000"
+  }
+}
