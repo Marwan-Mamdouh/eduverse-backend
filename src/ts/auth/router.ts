@@ -15,6 +15,4 @@ router.post(
   controller.logout
 );
 
-router.post("/with-google", controller.signInWithGoogle);
-
 export default router;
