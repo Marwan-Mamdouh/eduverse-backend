@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon src/ts/index.ts",
     "build": "tsc",
-    "start": "node dist/js/index.js"
+    "start": "node src/js/index.js"
   },
   "author": "marwan abdAlMagied",
   "license": "ISC",
