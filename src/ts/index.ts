@@ -10,7 +10,7 @@ import { errorHandler } from "./middlewares/errorHandler";
 import dotenv from "dotenv";
 dotenv.config();
 
-process.loadEnvFile(".env");
+// process.loadEnvFile(".env");
 
 const app: Application = express();
 const PORT = process.env.PORT || 3000;
