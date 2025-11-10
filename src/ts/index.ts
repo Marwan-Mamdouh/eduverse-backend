@@ -7,6 +7,7 @@ import authRouter from "./auth/router";
 import paymentRouter from "./payment/router";
 import dbConnect from "./db/db";
 import { errorHandler } from "./middlewares/errorHandler";
+import "dotenv";
 
 process.loadEnvFile(".env");
 
